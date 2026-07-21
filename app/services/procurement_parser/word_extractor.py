@@ -42,8 +42,14 @@ from .text_utils import normalize_ws, normalize_name, map_headers, parse_quantit
 
 # Same stop words as excel_extractor.py / product_extractor.py's PDF path.
 _STOP_WORDS = (
-    "итого", "всего", "total", "subtotal", "sum", "сумма прописью",
-    "раздел", "section",
+    "итого",
+    "всего",
+    "total",
+    "subtotal",
+    "sum",
+    "сумма прописью",
+    "раздел",
+    "section",
 )
 
 # A real article code looks like "522-101-1212008" / "245-401-0201".
@@ -53,6 +59,7 @@ _CODE_RE = re.compile(r"\d{2,3}-\d{2,3}-\d+")
 @dataclass
 class WordColumnMap:
     """1-based column (cell) indices within a table row."""
+
     item_no: int = 1
     code: int = 2
     name: int = 3
@@ -150,7 +157,9 @@ class WordProductExtractor:
 
         return products
 
-    def _find_best_header(self, rows: list[list[str]]) -> tuple[int, dict[str, int] | None]:
+    def _find_best_header(
+        self, rows: list[list[str]]
+    ) -> tuple[int, dict[str, int] | None]:
         best_map: dict[str, int] | None = None
         best_score = -1
         best_idx = 0

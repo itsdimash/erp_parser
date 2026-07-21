@@ -48,12 +48,14 @@ SUPPORTED_EXTENSIONS = (".pdf", ".xlsx", ".docx")
 @dataclass
 class PipelineConfig:
     parser: ParserConfig = field(default_factory=ParserConfig)
-    tessdata_dir: Optional[str] = None       # dir containing *.traineddata
-    template_path: Optional[str] = None      # company quotation template (.xlsx)
+    tessdata_dir: Optional[str] = None  # dir containing *.traineddata
+    template_path: Optional[str] = None  # company quotation template (.xlsx)
     excel_column_map: Optional[ExcelColumnMap] = None  # override xlsx input layout
-    excel_sheet_name: Optional[str] = None   # override xlsx input sheet
+    excel_sheet_name: Optional[str] = None  # override xlsx input sheet
     word_column_map: Optional[WordColumnMap] = None  # override docx input layout
-    word_table_index: Optional[int] = None   # override docx input table (default: scan all)
+    word_table_index: Optional[int] = (
+        None  # override docx input table (default: scan all)
+    )
 
 
 class Pipeline:
@@ -111,20 +113,15 @@ class Pipeline:
         # --- Step 2: classify every page ---
         total = len(result.page_analyses)
         for pa in result.page_analyses:
-            cat = self.classifier.classify(
-                pa, table_by_page.get(pa.page_number), total
-            )
+            cat = self.classifier.classify(pa, table_by_page.get(pa.page_number), total)
             result.page_categories[pa.page_number] = cat
 
-        logger.info(
-            "Processable pages: %s", result.processable_pages or "none"
-        )
+        logger.info("Processable pages: %s", result.processable_pages or "none")
 
         # --- keep only tables on processable pages ---
         processable = set(result.processable_pages)
         result.detected_tables = [
-            t for t in all_tables
-            if t.page_number in processable and t.is_product_table
+            t for t in all_tables if t.page_number in processable and t.is_product_table
         ]
 
         # --- Step 4: extract products ---

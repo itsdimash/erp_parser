@@ -39,7 +39,7 @@ def normalize_name(text: str) -> str:
     t = normalize_ws(text)
     # unify common separators and quote styles
     t = t.replace("\u00a0", " ").replace("«", '"').replace("»", '"')
-    t = re.sub(r"\s*[-–—]\s*", "-", t)   # standardize dashes
+    t = re.sub(r"\s*[-–—]\s*", "-", t)  # standardize dashes
     t = re.sub(r"\s{2,}", " ", t)
     return t.strip()
 

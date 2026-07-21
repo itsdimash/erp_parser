@@ -9,5 +9,5 @@ router = APIRouter(prefix="/health", tags=["Health"])
 async def health():
     """Basic Health check"""
     health_response = HealthResponse(status="OK", service="HEALTHY")
-    
+
     return health_response

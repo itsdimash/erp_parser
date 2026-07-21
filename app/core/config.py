@@ -9,7 +9,7 @@ class Settings(BaseSettings):
     DATABASE_USER: str = ""
     DATABASE_PASSWORD: str = ""
     DATABASE_PORT: int = 0
-    
+
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
 

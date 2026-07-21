@@ -25,13 +25,17 @@ from .pipeline import Pipeline, PipelineConfig, SUPPORTED_EXTENSIONS
 
 
 def main(argv=None):
-    p = argparse.ArgumentParser(description="Intelligent procurement parser (PDF or Excel input)")
+    p = argparse.ArgumentParser(
+        description="Intelligent procurement parser (PDF or Excel input)"
+    )
     p.add_argument("input_file", help=f"input file path {SUPPORTED_EXTENSIONS}")
     p.add_argument("-o", "--output", default="quotation.xlsx")
     p.add_argument("--template", help="company quotation template (.xlsx)")
     p.add_argument("--tessdata", help="directory with *.traineddata for OCR (PDF only)")
     p.add_argument("--no-ocr", action="store_true", help="disable OCR (PDF only)")
-    p.add_argument("--report", action="store_true", help="print per-page report (PDF only)")
+    p.add_argument(
+        "--report", action="store_true", help="print per-page report (PDF only)"
+    )
 
     p.add_argument("-v", "--verbose", action="store_true")
 

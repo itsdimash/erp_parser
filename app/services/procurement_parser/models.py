@@ -37,8 +37,6 @@ class PageCategory(str, Enum):
         }
 
 
-
-
 # Canonical column roles. Real headers (in any language) get mapped onto these.
 CANONICAL_FIELDS = (
     "item_no",
@@ -55,7 +53,7 @@ CANONICAL_FIELDS = (
 class PageAnalysis:
     """Step 1 output for a single page."""
 
-    page_number: int                 # 1-based
+    page_number: int  # 1-based
     has_table: bool = False
     has_selectable_text: bool = False
     ocr_required: bool = False
@@ -64,10 +62,10 @@ class PageAnalysis:
     keyword_hits: list[str] = field(default_factory=list)
     is_mostly_graphics: bool = False
     text_char_count: int = 0
-    image_area_ratio: float = 0.0    # fraction of page covered by raster images
+    image_area_ratio: float = 0.0  # fraction of page covered by raster images
     vector_drawing_count: int = 0
-    procurement_confidence: float = 0.0   # 0..1
-    text_sample: str = ""            # first ~500 chars, for classification/debug
+    procurement_confidence: float = 0.0  # 0..1
+    text_sample: str = ""  # first ~500 chars, for classification/debug
     notes: list[str] = field(default_factory=list)
 
 
@@ -80,8 +78,8 @@ class DetectedTable:
     rows: list[list[str]]
     # maps canonical field name -> column index in `header`/`rows`
     column_map: dict[str, int] = field(default_factory=dict)
-    source: str = "vector"           # "vector" (pdfplumber) or "ocr"
-    table_confidence: float = 0.0    # 0..1 that this is a real product table
+    source: str = "vector"  # "vector" (pdfplumber) or "ocr"
+    table_confidence: float = 0.0  # 0..1 that this is a real product table
 
     @property
     def is_product_table(self) -> bool:
@@ -92,6 +90,7 @@ class DetectedTable:
 @dataclass
 class Product:
     """Step 4 cleaned product extracted from a table row."""
+
     # Simplified product: only name and quantity are preserved for output
     name: str
     quantity: Optional[float] = None

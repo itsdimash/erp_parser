@@ -34,8 +34,11 @@ class PageClassifier:
         ck = self.config.category_keywords
 
         # 1) Pages with a genuine product table -> one of the 4 processable types
-        if product_table is not None and product_table.is_product_table \
-                and product_table.table_confidence >= 0.45:
+        if (
+            product_table is not None
+            and product_table.is_product_table
+            and product_table.table_confidence >= 0.45
+        ):
             return self._classify_product_table(product_table, text, ck)
 
         # 2) Non-table pages -> descriptive categories.

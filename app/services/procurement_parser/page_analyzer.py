@@ -65,9 +65,8 @@ class PageAnalyzer:
         # --- graphics analysis via PyMuPDF ---
         if fpage is not None:
             pa.image_area_ratio, pa.vector_drawing_count = self._graphics_metrics(fpage)
-        pa.is_mostly_graphics = (
-            pa.image_area_ratio >= cfg.graphics_dominant_ratio
-            or (pa.vector_drawing_count > 150 and pa.text_char_count < 400)
+        pa.is_mostly_graphics = pa.image_area_ratio >= cfg.graphics_dominant_ratio or (
+            pa.vector_drawing_count > 150 and pa.text_char_count < 400
         )
 
         # --- OCR decision ---
@@ -86,7 +85,7 @@ class PageAnalyzer:
                 if len(ocr_text) > pa.text_char_count:
                     pa.text_sample = normalize_ws(ocr_text)[:2000]
 
-        haystack = (text + " " + ocr_text)
+        haystack = text + " " + ocr_text
 
         # --- tables ---
         tables = self._find_tables(page)
@@ -135,9 +134,7 @@ class PageAnalyzer:
             import io
 
             img = Image.open(io.BytesIO(pix.tobytes("png")))
-            return ocr_image_to_text(
-                img, self.config.ocr_languages, self.tessdata_dir
-            )
+            return ocr_image_to_text(img, self.config.ocr_languages, self.tessdata_dir)
         except Exception:
             return ""
 
@@ -149,9 +146,7 @@ class PageAnalyzer:
             except Exception:
                 found = []
             for t in found or []:
-                cleaned = [
-                    [normalize_ws(c) if c else "" for c in row] for row in t
-                ]
+                cleaned = [[normalize_ws(c) if c else "" for c in row] for row in t]
                 # keep tables that meet minimum shape
                 if (
                     len(cleaned) >= self.config.min_rows_for_table

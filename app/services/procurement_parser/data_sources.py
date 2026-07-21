@@ -42,8 +42,7 @@ class CompanyDataSource(ABC):
         self.name = name or role
 
     @abstractmethod
-    def records(self) -> list[CompanyRecord]:
-        ...
+    def records(self) -> list[CompanyRecord]: ...
 
 
 class InMemoryDataSource(CompanyDataSource):
@@ -120,6 +119,7 @@ class JsonDataSource(CompanyDataSource):
             data = json.load(f)
         out = []
         for row in data:
+
             def get(field):
                 col = self.column_map.get(field)
                 v = row.get(col) if col else None

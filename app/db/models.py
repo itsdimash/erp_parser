@@ -17,19 +17,23 @@ from app.db.base import Base
 
 class Warehouse(Base):
     """Текущие остатки на складе."""
+
     __tablename__ = "warehouse"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    name: Mapped[str] = mapped_column(String, nullable=False)          # наименование
-    code: Mapped[str] = mapped_column(String, default="")             # артикул
-    unit: Mapped[str] = mapped_column(String, default="")             # ед. изм.
-    quantity: Mapped[float | None] = mapped_column(Float, nullable=True)     # остаток
-    cost_price: Mapped[float | None] = mapped_column(Float, nullable=True)   # себестоимость
-    supplier: Mapped[str] = mapped_column(String, default="")         # поставщик
+    name: Mapped[str] = mapped_column(String, nullable=False)  # наименование
+    code: Mapped[str] = mapped_column(String, default="")  # артикул
+    unit: Mapped[str] = mapped_column(String, default="")  # ед. изм.
+    quantity: Mapped[float | None] = mapped_column(Float, nullable=True)  # остаток
+    cost_price: Mapped[float | None] = mapped_column(
+        Float, nullable=True
+    )  # себестоимость
+    supplier: Mapped[str] = mapped_column(String, default="")  # поставщик
 
 
 class History(Base):
     """История закупок — было на складе, сейчас нет."""
+
     __tablename__ = "history"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)

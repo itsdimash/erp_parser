@@ -20,6 +20,7 @@ RUN_INTEGRATION = os.getenv("RUN_PARSER_INTEGRATION") == "1"
 # Базовые тесты валидации (без зависимостей парсера)
 # ──────────────────────────────────────────
 
+
 def test_parse_no_file():
     """Запрос без файла → 422 (FastAPI сам валидирует)"""
     response = client.post("/api/v1/parser/parse")
@@ -48,6 +49,7 @@ def test_parse_empty_file():
 # Интеграционный тест (реальный PDF -> Excel)
 # Требует зависимостей парсера + tesseract. По умолчанию пропускается.
 # ──────────────────────────────────────────
+
 
 @pytest.mark.skipif(
     not RUN_INTEGRATION,

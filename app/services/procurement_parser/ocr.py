@@ -17,7 +17,7 @@ from typing import Optional
 
 try:
     import pytesseract
-    from PIL import Image
+
     _OCR_IMPORTS_OK = True
 except Exception:  # pragma: no cover
     _OCR_IMPORTS_OK = False
@@ -107,7 +107,7 @@ def ocr_image_to_table(
         return []
 
     median_h = sorted(heights)[len(heights) // 2]
-    row_tol = max(4, median_h * row_tol_ratio)
+    max(4, median_h * row_tol_ratio)
 
     # Group by (block, par, line) which tesseract already computes per text line.
     lines: dict[tuple, list[dict]] = {}
@@ -116,9 +116,7 @@ def ocr_image_to_table(
         lines.setdefault(key, []).append(w)
 
     # Order lines by their average vertical position.
-    ordered = sorted(
-        lines.values(), key=lambda ws: sum(x["top"] for x in ws) / len(ws)
-    )
+    ordered = sorted(lines.values(), key=lambda ws: sum(x["top"] for x in ws) / len(ws))
 
     rows: list[list[str]] = []
     for line_words in ordered:

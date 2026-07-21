@@ -7,9 +7,22 @@ from .models import DetectedTable, Product
 from .text_utils import normalize_ws, normalize_name, parse_quantity
 
 _STOP_WORDS = (
-    "итого", "всего", "total", "subtotal", "sum", "сумма прописью",
-    "раздел", "section", "изм", "гип", "проверил", "выполнил", "подп", "дата"
+    "итого",
+    "всего",
+    "total",
+    "subtotal",
+    "sum",
+    "сумма прописью",
+    "раздел",
+    "section",
+    "изм",
+    "гип",
+    "проверил",
+    "выполнил",
+    "подп",
+    "дата",
 )
+
 
 class ProductExtractor:
     def __init__(self, config: ParserConfig):
@@ -26,11 +39,20 @@ class ProductExtractor:
     def _extract_from_table(self, table: DetectedTable) -> list[Product]:
         cmap = table.column_map
         out: list[Product] = []
-        room_keywords = ("кабинет", "помещение", "этаж", "блок", "зона", "комната", "класс")
+        room_keywords = (
+            "кабинет",
+            "помещение",
+            "этаж",
+            "блок",
+            "зона",
+            "комната",
+            "класс",
+        )
 
         def cell(row, field):
             idx = cmap.get(field)
-            if idx is None or idx >= len(row): return ""
+            if idx is None or idx >= len(row):
+                return ""
             return normalize_ws(row[idx])
 
         for row in table.rows:
@@ -43,9 +65,12 @@ class ProductExtractor:
 
             joined = " ".join(c for c in row if c).lower()
 
-            if any(sw in joined for sw in _STOP_WORDS): continue
-            if not any([name, desc, code, qty_raw]): continue
-            if name.strip() == "2" and (qty_raw.strip() == "7" or "6" in unit): continue
+            if any(sw in joined for sw in _STOP_WORDS):
+                continue
+            if not any([name, desc, code, qty_raw]):
+                continue
+            if name.strip() == "2" and (qty_raw.strip() == "7" or "6" in unit):
+                continue
 
             quantity = parse_quantity(qty_raw)
 
@@ -61,23 +86,36 @@ class ProductExtractor:
                             break
 
             low_name = (name + " " + desc).lower()
-            if quantity is None and not code and any(rk in low_name for rk in room_keywords): continue
+            if (
+                quantity is None
+                and not code
+                and any(rk in low_name for rk in room_keywords)
+            ):
+                continue
 
-            is_continuation = bool(out) and not item_no and not code and quantity is None and not unit
+            is_continuation = (
+                bool(out) and not item_no and not code and quantity is None and not unit
+            )
 
             if is_continuation:
                 prev = out[-1]
                 extra = name or desc
                 if extra:
-                    prev.name = normalize_name(prev.name + " " + extra) if prev.name else normalize_name(extra)
+                    prev.name = (
+                        normalize_name(prev.name + " " + extra)
+                        if prev.name
+                        else normalize_name(extra)
+                    )
                 continue
 
-            if not name and desc: name, desc = desc, ""
+            if not name and desc:
+                name, desc = desc, ""
             final_name = normalize_name(name) if name else normalize_name(code)
-            
-            if not final_name: continue
+
+            if not final_name:
+                continue
             out.append(Product(name=final_name, quantity=quantity))
-            
+
         return out
 
     @staticmethod
@@ -86,7 +124,8 @@ class ProductExtractor:
         result: list[Product] = []
         for p in products:
             key = (p.name.lower(), p.quantity)
-            if key in seen: continue
+            if key in seen:
+                continue
             seen.add(key)
             result.append(p)
         return result
